@@ -1,53 +1,119 @@
 <h4>Formularios <small>data</small></h4>
 <hr />
-<form [formGroup]="forma" (ngSubmit)="guardarCambios()" novalidate>
+<form [formGroup]="forma" (ngSubmit)="guardarCambios()">
     <div formGroupName="nombrecompleto">
-        <!--  -->
-        <div class="form-group row" [ngClass]="{ 'was-validated': forma.get('nombrecompleto.nombre').valid }">
+        <div class="form-group row">
+            <!-- NOMBRE -->
             <label class="col-2 col-form-label">Nombre</label>
             <div class="col-8">
-                <input class="form-control" type="text" placeholder="Nombre" formControlName="nombre" />
-
-                <div *ngIf="forma.get('nombrecompleto.nombre').errors?.required" class="form-control-feedback">
-                    El nombre es necesario
+                <input class="form-control" type="text" placeholder="Nombre" [ngClass]="{
+            'is-invalid':
+              forma.get('nombrecompleto.nombre').touched &&
+              !forma.get('nombrecompleto.nombre').valid,
+            'is-valid': forma.get('nombrecompleto.nombre').valid
+          }" formControlName="nombre" />
+                <div *ngIf="
+            forma.get('nombrecompleto.nombre').errors?.required &&
+            forma.get('nombrecompleto.nombre').touched
+          " class="form-control-feedback">
+                    Nombre necesario.
                 </div>
-
-                <div *ngIf="forma.get('nombrecompleto.nombre').errors?.minlength" class="form-control-feedback">
-                    El nombre es tiene que tener minimo 3 chars
+                <div *ngIf="
+            forma.get('nombrecompleto.nombre').errors?.minlength &&
+            forma.get('nombrecompleto.nombre').touched
+          " class="form-control-feedback">
+                    <!-- ATENCION AL MINLENGTH QUE ES FULL MINUSCULAS -->
+                    Minimo 3 caracteres.
                 </div>
             </div>
         </div>
-        <!-- [ngClass]="{ 'was-validated': forma.get('apellido').valid" } -->
+        <!-- APELLIDO -->
         <div class="form-group row">
-            <label class="col-2 col-form-label ">Apellido</label>
-            <div class="col-8 ">
-                <input class="form-control " type="text " placeholder="Apellido " />
-
-                <!-- <div *ngIf="forma.controls[ 'apellido'].errors?.required " class="form-control-feedback ">
-                    El apellido es necesario
-                </div>
-
-                <div *ngIf="forma.controls[ 'apellido'].errors?.minlength " class="form-control-feedback ">
-                    El apellido es tiene que tener minimo 3 chars
-                </div> -->
+            <label class="col-2 col-form-label">Apellido</label>
+            <div class="col-8">
+                <input class="form-control" type="text" placeholder="Apellido" [ngClass]="{
+            'is-invalid':
+              forma.get('nombrecompleto.apellido').touched &&
+              !forma.get('nombrecompleto.apellido').valid,
+            'is-valid': forma.get('nombrecompleto.apellido').valid
+          }" formControlName="apellido" />
             </div>
         </div>
     </div>
-
-    <div class="form-group row " [ngClass]="{ 'was-validated': forma.get('correo').valid }">
-        <label class="col-2 col-form-label ">Correo</label>
-        <div class="col-8 ">
-            <input class="form-control " type="email " placeholder="Correo electrónico" />
+    <!-- CORREO -->
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Correo</label>
+        <div class="col-8">
+            <input class="form-control" type="email" placeholder="Correo electrónico" [ngClass]="{
+          'is-invalid':
+            forma.get('correo').touched && !forma.get('correo').valid,
+          'is-valid': forma.get('correo').valid
+        }" formControlName="correo" />
+        </div>
+    </div>
+    <!-- USERNAME -->
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Username</label>
+        <div class="col-8">
+            <input class="form-control" type="text" placeholder="Usuario" formControlName="username" [ngClass]="{
+          'is-invalid':
+            forma.get('username').touched && !forma.get('username').valid,
+          'is-valid': forma.get('username').valid
+        }" />
         </div>
     </div>
 
-    <div class="form-group row ">
-        <label class="col-2 col-form-label ">&nbsp;</label>
-        <div class="input-group col-8 ">
-            <button type="submit " class="btn btn-outline-primary ">
+    <!-- PASSWORD -->
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Password</label>
+        <div class="col-8">
+            <input class="form-control" type="password" placeholder="Password" formControlName="password1" [ngClass]="{
+          'is-invalid':
+            forma.get('password1').touched && !forma.get('password1').valid,
+          'is-valid': forma.get('password1').valid
+        }" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Repetir</label>
+        <div class="col-8">
+            <input class="form-control" type="password" placeholder="Repetir password" formControlName="password2" [ngClass]="{
+          'is-invalid':
+            forma.get('password2').touched && !forma.get('password2').valid,
+          'is-valid': forma.get('password2').valid
+        }" />
+        </div>
+    </div>
+    <!-- PASATIEMPOS -->
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Pasatiempos</label>
+
+        <div class="col-8" formArrayName="pasatiempos">
+            <input *ngFor="
+          let pasatiempo of forma.controls['pasatiempos'].controls;
+          let i = index
+        " type="text" class="form-control mb-3" [formControlName]="i" />
+        </div>
+        <!-- Añadir PASATIEMPO -->
+
+        <button type="button" (click)="agregarPasatiepo()" class="btn btn-primary">
+      Nuevo
+    </button>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="form-group row">
+        <label class="col-2 col-form-label">&nbsp;</label>
+        <div class="input-group col-8">
+            <button type="submit" class="btn btn-outline-primary">
         Guardar
       </button>
         </div>
     </div>
+
     {{ forma.valid }}
+    <br /> {{ forma.status }}
 </form>
+
+<!-- ACABANDO EL 198 -->
